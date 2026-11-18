@@ -308,12 +308,11 @@ class DeviceTreeBlob:
         if irqs_raw is None:
             irqs_raw = self.get_node_prop(node, "interrupt")
 
-        num_u32s = len(irqs_raw) // 4
-        # otherwise: doomed
         if irqs_raw is None:
-            raise RuntimeError(f"{node} has no IRQs!")
+            return ()
 
         # just a bunch of u32s ... unpack using struct and return
+        num_u32s = len(irqs_raw) // 4
         return struct.unpack(f">{num_u32s}I", irqs_raw)
 
     def get_parsed_irqs(self, node: DTBNode, arch: Arch) -> Sequence[IRQ]:
